@@ -13,5 +13,9 @@ public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
   Optional<Cozinha> findByNome(String nome); //metodo listar por nome
   //Optional<Cozinha> findNomeByNome(String nome); //metodo listar por nome
   //List<Cozinha> nome (String nome); metodo listar por nome
+  //List<Cozinha> findByNomeContaining(String nome); //verifica se contem o que foi passado 
+  // int countByCozinhaId(Long cozinha);// conta o total de cozinhas
+  
+  
 	
 }
