@@ -60,11 +60,12 @@ public class Restaurante {
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 	
-	//@JsonIgnore
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
 	           joinColumns = @JoinColumn(name = "restaurante_id"),
