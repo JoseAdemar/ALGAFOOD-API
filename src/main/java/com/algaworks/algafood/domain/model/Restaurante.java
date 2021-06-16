@@ -8,7 +8,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,12 +16,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.DecimalMin;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.algaworks.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -33,22 +35,28 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Restaurante {
 
-	
-	@Id
 	@EqualsAndHashCode.Include
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//@NotNull não aceita valores nulo
-	//@NotEmpty não aceita campo vazio
-	//@NotBlank faz todas as opções acima e não aceita espaço em branco
-	@NotBlank
+	@NotBlank(groups = Groups.CadastroRestaurante.class)
 	@Column(nullable = false)
 	private String nome;
 	
-	@DecimalMin("0")
+	@PositiveOrZero(groups = Groups.CadastroRestaurante.class)
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
+	
+	@Valid
+	@NotNull(groups = Groups.CadastroRestaurante.class)
+	@ManyToOne
+	@JoinColumn(name = "cozinha_id", nullable = false)
+	private Cozinha cozinha;
+	
+	@JsonIgnore
+	@Embedded
+	private Endereco endereco;
 	
 	@JsonIgnore
 	@CreationTimestamp
@@ -61,31 +69,14 @@ public class Restaurante {
 	private LocalDateTime dataAtualizacao;
 	
 	@JsonIgnore
-	@Embedded
-	private Endereco endereco;
+	@ManyToMany
+	@JoinTable(name = "restaurante_forma_pagamento",
+			joinColumns = @JoinColumn(name = "restaurante_id"),
+			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 	
-	//@JsonIgnore
-	//@JsonIgnoreProperties("hibernateLazyInitializer")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cozinha_id", nullable = false)
-	private Cozinha cozinha;
-	
-	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "restaurante_forma_pagamento",
-	           joinColumns = @JoinColumn(name = "restaurante_id"),
-	           inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-	private List<FormaPagamento> formasPagamento = new ArrayList<>();
-	
 }
-
-
-
-
-
-
-
