@@ -24,6 +24,7 @@ public class CadastroCozinhaIT {
    
 	@LocalServerPort
 	private int port;
+
 	
 	@Autowired
 	private DatabaseCleaner databaseCleaner;
