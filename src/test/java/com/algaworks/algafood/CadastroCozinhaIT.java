@@ -33,7 +33,7 @@ public class CadastroCozinhaIT {
 	private int port;
 	
 	@Autowired
-	private DatabaseCleaner databaseCleaner;
+	private DatabaseCleaner  databaseCleaner;
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
